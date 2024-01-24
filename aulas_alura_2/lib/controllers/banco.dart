@@ -1,3 +1,5 @@
+import 'package:bot_alura/controllers/exeption_banco.dart';
+
 import '../models/account.dart';
 
 class BankController {
@@ -11,14 +13,16 @@ class BankController {
       {required String idSender,
       required String idReceiver,
       required double amount}) {
+
     // Verificar se ID de remetente é válido
     if (!verifyId(idSender)) {
-      return false;
+      throw SenderIdInvalidExeption(idSender: idSender);
+
     }
 
     // Verificar se ID de destinatário é válido
     if (!verifyId(idReceiver)) {
-      return false;
+      throw ReceiverIdInvaldExeption(idReciver: idReceiver);
     }
 
     Account accountSender = _database[idSender]!;
@@ -26,12 +30,12 @@ class BankController {
 
     // Verificar se o remetente está autenticado
     if (!accountSender.isAuthenticated) {
-      return false;
+      throw SenderNotAuthenticatedExeption(idSender: idSender);
     }
 
     // Verificar se o remetente possui saldo suficiente
     if (accountSender.balance < amount) {
-      return false;
+      throw SenderBalenceLowerThanAmountExeption(idSender: idSender, senderBalance: accountSender.balance, amount: amount);
     }
 
     // Se tudo estiver certo, efetivar transação

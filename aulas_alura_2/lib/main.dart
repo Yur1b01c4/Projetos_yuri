@@ -1,58 +1,47 @@
-// import 'controllers/bank_controller.dart';
-// import 'models/account.dart';
+import 'dart:io';
+import 'package:bot_alura/controllers/exeption_banco.dart';
 
-// void main() {
-//   // Criando o banco
-//   BankController bankController = BankController();
+import 'controllers/banco.dart';
+import 'models/account.dart';
 
-//   // Adicionando contas
-//   bankController.addAccount(
-//       id: "Ricarth",
-//       account:
-//           Account(name: "Ricarth Lima", balance: 400, isAuthenticated: true));
+void main() {
+  // Criando o banco
+  BankController bankController = BankController();
 
-//   bankController.addAccount(
-//       id: "Kako",
-//       account:
-//           Account(name: "Caio Couto", balance: 600, isAuthenticated: true));
+  // Adicionando contas
+  bankController.addAccount(
+      id: "Ricarth",
+      account:
+          Account(name: "Ricarth Lima", balance: 400, isAuthenticated: true));
 
-//   // Fazendo transferência
-//   bool result = bankController.makeTransfer(
-//       idSender: "Kako", idReceiver: "Ricarth", amount: 700);
+  bankController.addAccount(
+      id: "Kako",
+      account:
+          Account(name: "Caio Couto", balance: 600, isAuthenticated: true));
 
-//   // Observando resultado
-//   print(result);
-// }
+  // Fazendo transferência
+try{
+  bool result = bankController.makeTransfer(
+      idSender: "Kako", idReceiver: "Ricarth", amount: 1269);
 
-main(){
-  functionMain();
+if(result){
+  print('transação feita');
 
 }
-
-void functionMain(){
-  print('Function main');
-  functionOne();
-  print('Function main is finished');
+} on SenderIdInvalidExeption catch(e){
+  print(e);
+  print('O id ${e.idSender}, do remetente não é um id valido');
+}on ReceiverIdInvaldExeption catch(e){
+  print(e);
+  print('O id ${e.idReciver}, do destinatario não é um id valido');
+}on SenderNotAuthenticatedExeption catch(e){
+  print(e);
+  print('O usuario do id ${e.idSender}, é invalido');
+}on SenderBalenceLowerThanAmountExeption catch(e){
+  print(e);
+  print('O usuario de id ${e.idSender}, tentou enviar ${e.amount} sendo que ele é pobre e só tem ${e.senderBalance}');
+}on Exception{
+  print('Algo deu errado ;(');
 }
-
-void functionOne(){
-  print('Function One');
-  try {
-    functionTwo();
-  } on FormatException catch(e){
-    print('Exeption Capturada');
-    print(e.message);
-    print(e.source);
-    print(e.toString());
-  }
-  print('Function One is finished');
-}
-
-void functionTwo(){
-  print('Function Two');
-  for( int i = 1; i <= 5; i++){
-    print(i);
-  }
-  double sim = double.parse('okokok');
-  print('Function Two is finished');
+  // Observando resultado
 }
